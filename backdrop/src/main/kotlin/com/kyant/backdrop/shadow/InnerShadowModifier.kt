@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.layer.CompositingStrategy
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.node.CompositionLocalConsumerModifierNode
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
@@ -20,7 +21,6 @@ import com.kyant.backdrop.internal.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.toIntSize
 import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.clipOutline
 import com.kyant.backdrop.isRenderEffectSupported
@@ -66,7 +66,7 @@ internal class InnerShadowElement(
 internal class InnerShadowNode(
     var shapeProvider: ShapeProvider,
     var shadow: () -> InnerShadow?
-) : DrawModifierNode, Modifier.Node() {
+) : DrawModifierNode, CompositionLocalConsumerModifierNode, Modifier.Node() {
 
     override val shouldAutoInvalidate: Boolean = false
 
@@ -115,7 +115,7 @@ internal class InnerShadowNode(
                     }
                 prevRadius = radius
             }
-            shadowLayer.record(density, layoutDirection, size.toIntSize()) {
+            shadowLayer.record(density, layoutDirection, IntSize(size.width.toInt(), size.height.toInt())) {
                 val canvas = drawContext.canvas
                 canvas.save()
                 canvas.clipOutline(outline, clipPath)

@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import kotlin.math.lerp
 
 @Immutable
 data class InnerShadow(
@@ -35,7 +34,7 @@ fun lerp(start: InnerShadow, stop: InnerShadow, fraction: Float): InnerShadow {
         radius = lerp(start.radius, stop.radius, fraction),
         offset = lerp(start.offset, stop.offset, fraction),
         color = lerp(start.color, stop.color, fraction),
-        alpha = lerp(start.alpha, stop.alpha, fraction),
+        alpha = start.alpha + (stop.alpha - start.alpha) * fraction,
         blendMode = if (fraction < 0.5f) start.blendMode else stop.blendMode
     )
 }

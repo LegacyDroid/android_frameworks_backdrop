@@ -1,11 +1,13 @@
 package com.kyant.backdrop.backdrops
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -14,7 +16,6 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.compose.ui.unit.Density
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.internal.InverseLayerScope
@@ -23,11 +24,16 @@ private val DefaultOnDraw: ContentDrawScope.() -> Unit = { drawContent() }
 
 /**
  * Compat shim for [rememberGraphicsLayer] which doesn't exist in Compose UI 1.7.0.
- * Creates and remembers a [GraphicsLayer] using [LocalGraphicsContext].
+ * Creates and remembers a [GraphicsLayer] using LocalGraphicsContext, accessed via
+ * reflection since it's not importable with compose-compiler 1.5.9.
  */
 @Composable
 private fun rememberGraphicsLayerCompat(): GraphicsLayer {
-    val graphicsContext = LocalGraphicsContext.current
+    @Suppress("UNCHECKED_CAST")
+    val local = Class.forName("androidx.compose.ui.platform.CompositionLocalsKt")
+        .getDeclaredMethod("getLocalGraphicsContext")
+        .invoke(null) as CompositionLocal<androidx.compose.ui.graphics.GraphicsContext>
+    val graphicsContext = local.current
     return remember(graphicsContext) { graphicsContext.createGraphicsLayer() }
 }
 
@@ -66,7 +72,7 @@ class LayerBackdrop internal constructor(
             }
             val offset =
                 try {
-                    layerCoordinates.localPositionOf(coordinates, false)
+                    layerCoordinates.localPositionOf(coordinates, Offset.Zero)
                 } catch (_: Exception) {
                     // TODO: outer transformations lead to wrong position calculation
                     coordinates.positionInWindow() - layerCoordinates.positionInWindow()
