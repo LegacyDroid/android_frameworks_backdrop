@@ -22,6 +22,7 @@ import androidx.compose.runtime.CompositionLocal
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
@@ -126,7 +127,7 @@ fun AdaptiveLuminanceGlassContent() {
                     },
                     onDrawBackdrop = { drawBackdrop ->
                         drawBackdrop()
-                        record(layer) { drawBackdrop() }
+                        layer.record(this, this.layoutDirection, IntSize(size.width.toInt(), size.height.toInt())) { drawBackdrop() }
                     }
                 )
                 .pointerInput(animationScope) {
