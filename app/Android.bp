@@ -13,8 +13,8 @@ android_library {
         "androidx.compose.foundation_foundation",
         "androidx.compose.material_material-ripple",
         "androidx.compose.runtime_runtime",
-        "androidx.compose.ui_ui",
-        "androidx.compose.ui_ui-graphics",
+        "liquidglass-compose-ui",
+        "liquidglass-compose-ui-graphics",
         "androidx.compose.ui_ui-util",
     ],
 

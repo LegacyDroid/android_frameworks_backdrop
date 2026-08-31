@@ -8,8 +8,8 @@ android_library {
         "LiquidGlassShapes",
         "androidx.compose.foundation_foundation",
         "androidx.compose.runtime_runtime",
-        "androidx.compose.ui_ui",
-        "androidx.compose.ui_ui-graphics",
+        "liquidglass-compose-ui",
+        "liquidglass-compose-ui-graphics",
     ],
 
     kotlincflags: [
