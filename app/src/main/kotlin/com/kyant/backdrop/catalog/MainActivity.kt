@@ -2,7 +2,8 @@ package com.kyant.backdrop.catalog
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AbstractComposeView
 import androidx.core.view.WindowCompat
 
 class MainActivity : ComponentActivity() {
@@ -11,8 +12,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        setContent {
-            MainContent()
-        }
+        setContentView(
+            object : AbstractComposeView(this) {
+                @Composable
+                override fun Content() {
+                    MainContent()
+                }
+            }
+        )
     }
 }
