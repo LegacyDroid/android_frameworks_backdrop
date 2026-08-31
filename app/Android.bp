@@ -1,13 +1,14 @@
 android_library {
     name: "LiquidGlassCatalog",
-    srcs: ["app/src/main/kotlin/**/*.kt"],
+    srcs: ["src/main/kotlin/**/*.kt"],
     platform_apis: true,
-    manifest: "app/AndroidManifest.xml",
-    resource_dirs: ["app/src/main/res"],
+    manifest: "AndroidManifest.xml",
+    resource_dirs: ["src/main/res"],
 
     static_libs: [
         "LiquidGlassBackdrop",
         "LiquidGlassShapes",
+        "kotlinx-coroutines-android",
         "androidx.activity_activity-compose",
         "androidx.compose.foundation_foundation",
         "androidx.compose.material_material-ripple",
