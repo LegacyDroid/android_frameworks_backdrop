@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.runtime.CompositionLocal
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +45,13 @@ import kotlin.math.sin
 fun AdaptiveLuminanceGlassContent() {
     val isLightTheme = !isSystemInDarkTheme()
 
-    val layer = rememberGraphicsLayer()
+    @Suppress("UNCHECKED_CAST")
+    val graphicsContext = remember {
+        Class.forName("androidx.compose.ui.platform.CompositionLocalsKt")
+            .getDeclaredMethod("getLocalGraphicsContext")
+            .invoke(null) as CompositionLocal<androidx.compose.ui.graphics.GraphicsContext>
+    }.current
+    val layer = remember(graphicsContext) { graphicsContext.createGraphicsLayer() }
     val luminanceAnimation = remember(isLightTheme) {
         Animatable(if (isLightTheme) 1f else 0f)
     }
