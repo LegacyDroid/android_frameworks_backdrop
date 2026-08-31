@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
-import androidx.compose.ui.node.requireGraphicsContext
+import com.kyant.backdrop.internal.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.util.fastCoerceAtMost
+import kotlin.math.min
 import com.kyant.backdrop.RuntimeShaderCacheImpl
 import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.blur
@@ -116,7 +116,7 @@ internal class HighlightNode(
 
             highlightLayer.alpha = highlight.alpha
             highlightLayer.blendMode = highlight.style.blendMode
-            highlightLayer.record(safeSize) {
+            highlightLayer.record(density, layoutDirection, safeSize) {
                 translate(1f, 1f) {
                     val canvas = drawContext.canvas
                     canvas.save()
@@ -150,7 +150,7 @@ internal class HighlightNode(
 
     private fun DrawScope.configurePaint(highlight: Highlight) {
         paint.color = highlight.style.color
-        paint.strokeWidth = ceil(highlight.width.toPx().fastCoerceAtMost(size.minDimension / 2f)) * 2f
+        paint.strokeWidth = ceil(highlight.width.toPx().coerceAtMost(size.minDimension / 2f)) * 2f
         paint.blur(highlight.blurRadius.toPx())
         if (isRuntimeShaderSupported()) {
             val shader =

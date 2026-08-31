@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
-import androidx.compose.ui.node.requireGraphicsContext
+import com.kyant.backdrop.internal.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
@@ -92,7 +92,7 @@ internal class ShadowNode(
 
             shadowLayer.alpha = shadow.alpha
             shadowLayer.blendMode = shadow.blendMode
-            shadowLayer.record(shadowSize) {
+            shadowLayer.record(density, layoutDirection, shadowSize) {
                 translate(radius * 2f + offsetX, radius * 2f + offsetY) {
                     val canvas = drawContext.canvas
                     canvas.drawOutline(outline, paint)

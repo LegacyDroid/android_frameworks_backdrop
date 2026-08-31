@@ -12,18 +12,28 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.compose.ui.unit.Density
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.internal.InverseLayerScope
 
 private val DefaultOnDraw: ContentDrawScope.() -> Unit = { drawContent() }
 
+/**
+ * Compat shim for [rememberGraphicsLayer] which doesn't exist in Compose UI 1.7.0.
+ * Creates and remembers a [GraphicsLayer] using [LocalGraphicsContext].
+ */
+@Composable
+private fun rememberGraphicsLayerCompat(): GraphicsLayer {
+    val graphicsContext = LocalGraphicsContext.current
+    return remember(graphicsContext) { graphicsContext.createGraphicsLayer() }
+}
+
 @Composable
 fun rememberLayerBackdrop(
-    graphicsLayer: GraphicsLayer = rememberGraphicsLayer(),
+    graphicsLayer: GraphicsLayer = rememberGraphicsLayerCompat(),
     onDraw: ContentDrawScope.() -> Unit = DefaultOnDraw
 ): LayerBackdrop {
     return remember(graphicsLayer, onDraw) {
@@ -56,7 +66,7 @@ class LayerBackdrop internal constructor(
             }
             val offset =
                 try {
-                    layerCoordinates.localPositionOf(coordinates)
+                    layerCoordinates.localPositionOf(coordinates, false)
                 } catch (_: Exception) {
                     // TODO: outer transformations lead to wrong position calculation
                     coordinates.positionInWindow() - layerCoordinates.positionInWindow()

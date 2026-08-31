@@ -14,7 +14,7 @@ internal fun DrawScope.recordLayer(
     block: DrawScope.() -> Unit
 ) {
     val density = node.requireDensity()
-    layer.record(size) {
+    layer.record(density, layoutDirection, size) {
         val prevDensity = drawContext.density
         drawContext.density = density
         try {

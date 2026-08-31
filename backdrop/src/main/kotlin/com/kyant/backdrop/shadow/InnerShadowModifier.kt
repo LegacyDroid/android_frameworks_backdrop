@@ -16,9 +16,11 @@ import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
-import androidx.compose.ui.node.requireGraphicsContext
+import com.kyant.backdrop.internal.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.toIntSize
 import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.clipOutline
 import com.kyant.backdrop.isRenderEffectSupported
@@ -113,7 +115,7 @@ internal class InnerShadowNode(
                     }
                 prevRadius = radius
             }
-            shadowLayer.record {
+            shadowLayer.record(density, layoutDirection, size.toIntSize()) {
                 val canvas = drawContext.canvas
                 canvas.save()
                 canvas.clipOutline(outline, clipPath)
