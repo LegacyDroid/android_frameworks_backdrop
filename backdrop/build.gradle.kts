@@ -1,80 +1,52 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.multiplatform.library)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id("com.vanniktech.maven.publish")
 }
 
-kotlin {
-    android {
+android {
+    namespace = "com.kyant.backdrop"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
+
+    defaultConfig {
         minSdk = 21
-        compileSdk = 37
-        buildToolsVersion = "37.0.0"
-        namespace = "com.kyant.backdrop"
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
     }
 
-    applyDefaultHierarchyTemplate()
-
-    jvm("desktop")
-
-    js {
-        browser()
-    }
-    wasmJs {
-        browser()
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
-    macosArm64()
-    iosArm64("iosArm64")
-    iosSimulatorArm64("iosSimulatorArm64")
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 
-    sourceSets {
-        val commonMain = getByName("commonMain") {
-            dependencies {
-                implementation(libs.compose.foundation)
-                implementation(libs.compose.ui)
-                implementation(libs.compose.ui.graphics)
-                implementation(libs.kyant.shapes)
-                implementation("org.jetbrains:annotations:26.1.0")
-            }
-        }
+    buildFeatures {
+        compose = true
+    }
 
-        val skikoMain = create("skikoMain") {
-            dependsOn(commonMain)
-        }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
+}
 
-        val desktopMain = getByName("desktopMain") {
-            dependsOn(skikoMain)
-        }
+dependencies {
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(project(":shapes"))
 
-        val macosArm64Main = getByName("macosArm64Main") {
-            dependsOn(skikoMain)
-        }
-
-        val iosMain = getByName("iosMain") {
-            dependsOn(skikoMain)
-        }
-
-        val iosArm64Main = getByName("iosArm64Main") {
-        }
-
-        val iosSimulatorArm64Main = getByName("iosSimulatorArm64Main") {
-        }
-
-        val jsMain = getByName("jsMain") {
-            dependsOn(skikoMain)
-        }
-
-        val wasmJsMain = getByName("wasmJsMain") {
-            dependsOn(skikoMain)
+    constraints {
+        implementation("org.jetbrains:annotations:23.0.0") {
+            because("kotlin-stdlib depends on annotations:13.0 but compose requires 23.0.0")
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 mavenPublishing {
@@ -85,7 +57,7 @@ mavenPublishing {
 
     pom {
         name.set("Backdrop")
-        description.set("Compose Multiplatform Liquid Glass effects")
+        description.set("Compose Liquid Glass effects")
         inceptionYear.set("2025")
         url.set("https://github.com/Kyant0/AndroidLiquidGlass")
         licenses {

@@ -12,7 +12,7 @@ pluginManagement {
     }
 }
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -26,3 +26,5 @@ rootProject.name = "Glass"
 include(":backdrop")
 include(":app")
 include(":androidApp")
+include(":shapes")
+project(":shapes").projectDir = file("../android_frameworks_shapes/shapes")

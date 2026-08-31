@@ -1,20 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.kyant.backdrop.catalog"
-    compileSdk = 37
-    buildToolsVersion = "37.0.0"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "com.kyant.backdrop.catalog"
         minSdk = 23
-        targetSdk = 37
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
-        androidResources.localeFilters += arrayOf("en")
+        resourceConfigurations += "en"
     }
 
     buildTypes {
@@ -22,11 +22,13 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            vcsInfo.include = false
         }
     }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packaging {
         resources {
@@ -52,9 +54,18 @@ android {
     lint {
         checkReleaseBuilds = false
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(project(":app"))
