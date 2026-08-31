@@ -126,7 +126,7 @@ fun AdaptiveLuminanceGlassContent() {
                     },
                     onDrawBackdrop = { drawBackdrop ->
                         drawBackdrop()
-                        layer.record { drawBackdrop() }
+                        record(layer) { drawBackdrop() }
                     }
                 )
                 .pointerInput(animationScope) {
