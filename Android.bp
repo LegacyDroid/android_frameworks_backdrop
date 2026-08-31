@@ -1,0 +1,18 @@
+android_library {
+    name: "LiquidGlassBackdrop",
+    srcs: ["backdrop/src/main/kotlin/**/*.kt"],
+    platform_apis: true,
+    manifest: "backdrop/AndroidManifest.xml",
+
+    static_libs: [
+        "LiquidGlassShapes",
+        "androidx.compose.foundation_foundation",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.ui_ui",
+        "androidx.compose.ui_ui-graphics",
+    ],
+
+    kotlincflags: [
+        "-opt-in=androidx.compose.runtime.ExperimentalComposeApi",
+    ],
+}

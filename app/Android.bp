@@ -1,0 +1,24 @@
+android_library {
+    name: "LiquidGlassCatalog",
+    srcs: ["app/src/main/kotlin/**/*.kt"],
+    platform_apis: true,
+    manifest: "app/AndroidManifest.xml",
+    resource_dirs: ["app/src/main/res"],
+
+    static_libs: [
+        "LiquidGlassBackdrop",
+        "LiquidGlassShapes",
+        "androidx.activity_activity-compose",
+        "androidx.compose.foundation_foundation",
+        "androidx.compose.material_material-ripple",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.ui_ui",
+        "androidx.compose.ui_ui-graphics",
+        "androidx.compose.ui_ui-util",
+    ],
+
+    kotlincflags: [
+        "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+        "-opt-in=androidx.compose.runtime.ExperimentalComposeApi",
+    ],
+}
