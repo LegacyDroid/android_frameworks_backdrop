@@ -10,11 +10,10 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.layer.CompositingStrategy
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.node.CompositionLocalConsumerModifierNode
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
-import com.kyant.backdrop.internal.requireGraphicsContext
+import androidx.compose.ui.node.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
@@ -63,7 +62,7 @@ internal class ShadowElement(
 internal class ShadowNode(
     var shapeProvider: ShapeProvider,
     var shadow: () -> Shadow?
-) : DrawModifierNode, CompositionLocalConsumerModifierNode, Modifier.Node() {
+) : DrawModifierNode, Modifier.Node() {
 
     override val shouldAutoInvalidate: Boolean = false
 

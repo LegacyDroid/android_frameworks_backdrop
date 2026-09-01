@@ -19,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import android.view.ViewGroup
-import androidx.compose.ui.graphics.GraphicsContext
+import androidx.compose.ui.graphics.layer.CompositingStrategy
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalView
-import java.lang.reflect.Constructor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
@@ -50,16 +48,8 @@ import kotlin.math.sin
 fun AdaptiveLuminanceGlassContent() {
     val isLightTheme = !isSystemInDarkTheme()
 
-    val view = LocalView.current
-    val layer = remember(view) {
-        val viewGroup = view.parent as? ViewGroup
-            ?: throw IllegalStateException("No ViewGroup parent")
-        val clazz = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
-        val ctor = clazz.getDeclaredConstructor(ViewGroup::class.java)
-        ctor.isAccessible = true
-        @Suppress("UNCHECKED_CAST")
-        val graphicsContext = ctor.newInstance(viewGroup) as GraphicsContext
-        graphicsContext.createGraphicsLayer()
+    val layer = rememberGraphicsLayer().apply {
+        compositingStrategy = CompositingStrategy.Offscreen
     }
     val luminanceAnimation = remember(isLightTheme) {
         Animatable(if (isLightTheme) 1f else 0f)

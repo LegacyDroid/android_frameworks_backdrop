@@ -1,48 +1,29 @@
 package com.kyant.backdrop.backdrops
 
-import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.GraphicsContext
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.internal.InverseLayerScope
-import java.lang.reflect.Constructor
 
 private val DefaultOnDraw: ContentDrawScope.() -> Unit = { drawContent() }
 
 @Composable
-private fun rememberGraphicsLayerCompat(): GraphicsLayer {
-    val view = LocalView.current
-    val graphicsContext = remember(view) {
-        val viewGroup = view.parent as? ViewGroup
-            ?: throw IllegalStateException("No ViewGroup parent found")
-        val clazz = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
-        val ctor = clazz.getDeclaredConstructor(ViewGroup::class.java)
-        ctor.isAccessible = true
-        @Suppress("UNCHECKED_CAST")
-        ctor.newInstance(viewGroup) as GraphicsContext
-    }
-    return remember(graphicsContext) { graphicsContext.createGraphicsLayer() }
-}
-
-@Composable
 fun rememberLayerBackdrop(
-    graphicsLayer: GraphicsLayer = rememberGraphicsLayerCompat(),
+    graphicsLayer: GraphicsLayer = rememberGraphicsLayer(),
     onDraw: ContentDrawScope.() -> Unit = DefaultOnDraw
 ): LayerBackdrop {
     return remember(graphicsLayer, onDraw) {
@@ -75,7 +56,7 @@ class LayerBackdrop internal constructor(
             }
             val offset =
                 try {
-                    layerCoordinates.localPositionOf(coordinates, Offset.Zero)
+                    layerCoordinates.localPositionOf(coordinates)
                 } catch (_: Exception) {
                     // TODO: outer transformations lead to wrong position calculation
                     coordinates.positionInWindow() - layerCoordinates.positionInWindow()
