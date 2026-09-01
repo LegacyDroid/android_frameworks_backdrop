@@ -254,7 +254,7 @@ private class DrawBackdropNode(
     private val layoutLayerBlock: GraphicsLayerScope.() -> Unit = {
         clip = true
         shape = shapeProvider.shape
-        compositingStrategy = androidx.compose.ui.graphics.CompositingStrategy.Offscreen
+        compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
     }
 
     private var layoutCoordinates: LayoutCoordinates? by mutableStateOf(null, neverEqualPolicy())
@@ -371,7 +371,7 @@ private class DrawBackdropNode(
     override fun onAttach() {
         val graphicsContext = requireGraphicsContext()
         graphicsLayer = graphicsContext.createGraphicsLayer().apply {
-            compositingStrategy = androidx.compose.ui.graphics.CompositingStrategy.Offscreen
+            compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
         }
 
         observeEffects()
