@@ -14,6 +14,7 @@ import com.kyant.backdrop.catalog.destinations.BottomTabsContent
 import com.kyant.backdrop.catalog.destinations.ButtonsContent
 import com.kyant.backdrop.catalog.destinations.ControlCenterContent
 import com.kyant.backdrop.catalog.destinations.DialogContent
+import com.kyant.backdrop.catalog.destinations.FakeGlassContent
 import com.kyant.backdrop.catalog.destinations.GlassPlaygroundContent
 import com.kyant.backdrop.catalog.destinations.HomeContent
 import com.kyant.backdrop.catalog.destinations.LazyScrollContainerContent
@@ -52,6 +53,8 @@ fun MainContent() {
             CatalogDestination.ProgressiveBlur -> ProgressiveBlurContent()
             CatalogDestination.ScrollContainer -> ScrollContainerContent()
             CatalogDestination.LazyScrollContainer -> LazyScrollContainerContent()
+
+            CatalogDestination.FakeGlass -> FakeGlassContent()
         }
 
         BackHandler(destination != CatalogDestination.Home) {

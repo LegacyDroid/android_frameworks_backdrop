@@ -263,6 +263,8 @@ private class DrawBackdropNode(
 
     private var padding by mutableFloatStateOf(0f)
 
+    private var diagnosticsSent = 0
+
     private val recordBackdropBlock: (DrawScope.() -> Unit) = {
         val canvas = drawContext.canvas
         val padding = padding
@@ -305,26 +307,6 @@ private class DrawBackdropNode(
 
             if (diagnosticsSent < 5) {
                 diagnosticsSent++
-                try {
-                    val dc = drawContext
-                    val dcClass = dc.javaClass.name
-                    val dcCL = dc.javaClass.classLoader?.javaClass?.name ?: "null"
-                    val parentLayer = dc.graphicsLayer
-                    val canvas = dc.canvas
-                    val nativeCanvas = try {
-                        val method = canvas.javaClass.getMethod("getInternalCanvas")
-                        method.invoke(canvas) as? android.graphics.Canvas
-                    } catch (_: Exception) { null }
-                    val isHwAccelerated = nativeCanvas?.isHardwareAccelerated ?: false
-                        "drawBackdropLayer #$diagnosticsSent: " +
-                        "size=$size, layerClass=${layer.javaClass.simpleName}, " +
-                        "dcClass=$dcClass, dcCL=$dcCL, " +
-                        "parentLayer=${parentLayer?.javaClass?.simpleName ?: "null"}, " +
-                        "hwAccelerated=$isHwAccelerated, " +
-                        "renderEffect=${layer.renderEffect?.javaClass?.simpleName ?: "null"}"
-                    )
-                } catch (e: Exception) {
-                }
             }
 
             drawLayer(layer)

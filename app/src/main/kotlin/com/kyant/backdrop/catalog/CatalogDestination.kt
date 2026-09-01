@@ -18,4 +18,6 @@ enum class CatalogDestination {
     ProgressiveBlur,
     ScrollContainer,
     LazyScrollContainer,
+
+    FakeGlass,
 }

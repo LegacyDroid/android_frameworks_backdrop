@@ -59,6 +59,9 @@ fun HomeContent(onNavigate: (CatalogDestination) -> Unit) {
             ListItem({ onNavigate(CatalogDestination.ProgressiveBlur) }, "Progressive blur")
             ListItem({ onNavigate(CatalogDestination.ScrollContainer) }, "Scroll container")
             ListItem({ onNavigate(CatalogDestination.LazyScrollContainer) }, "Lazy scroll container")
+
+            Subtitle("Battery saver")
+            ListItem({ onNavigate(CatalogDestination.FakeGlass) }, "Fake glass (no blur)")
         }
     }
 }
