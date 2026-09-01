@@ -1,6 +1,5 @@
 package com.kyant.backdrop.catalog.destinations
 
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.tween
@@ -64,7 +63,7 @@ fun AdaptiveLuminanceGlassContent() {
         Animatable(if (isLightTheme) 1f else 0f)
     }
     val contentColorAnimation = remember(isLightTheme) {
-        Animatable(if (isLightTheme) Color.Black else Color.White)
+        Animatable(if (isLightTheme) Color.Black else Color.White, Color.VectorConverter)
     }
     LaunchedEffect(layer) {
         val buffer = IntArray(25)
