@@ -48,8 +48,12 @@ class LayerBackdrop internal constructor(
         coordinates: LayoutCoordinates?,
         layerBlock: (GraphicsLayerScope.() -> Unit)?
     ) {
-        val coordinates = coordinates ?: return
-        val layerCoordinates = layerCoordinates ?: return
+        val coordinates = coordinates ?: run {
+            return
+        }
+        val layerCoordinates = layerCoordinates ?: run {
+            return
+        }
         withTransform({
             if (layerBlock != null) {
                 with(obtainInverseLayerScope()) { inverseTransform(density, layerBlock) }

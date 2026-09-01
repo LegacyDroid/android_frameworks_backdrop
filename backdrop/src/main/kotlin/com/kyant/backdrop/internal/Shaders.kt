@@ -20,6 +20,11 @@ import org.intellij.lang.annotations.Language
 
 @Language("AGSL")
 private const val RoundedRectSDF = """
+float2 safeNormalize(float2 v) {
+    float len = length(v);
+    return len > 0.0001 ? v / len : float2(0.0);
+}
+
 float radiusAt(float2 coord, float4 radii) {
     if (coord.x >= 0.0) {
         if (coord.y <= 0.0) return radii.y;
@@ -40,7 +45,7 @@ float sdRoundedRect(float2 coord, float2 halfSize, float radius) {
 float2 gradSdRoundedRect(float2 coord, float2 halfSize, float radius) {
     float2 cornerCoord = abs(coord) - (halfSize - float2(radius));
     if (cornerCoord.x >= 0.0 || cornerCoord.y >= 0.0) {
-        return sign(coord) * normalize(max(cornerCoord, 0.0));
+        return sign(coord) * safeNormalize(max(cornerCoord, 0.0));
     } else {
         float gradX = step(cornerCoord.y, cornerCoord.x);
         return sign(coord) * float2(gradX, 1.0 - gradX);
@@ -61,25 +66,29 @@ uniform float depthEffect;
 $RoundedRectSDF
 
 float circleMap(float x) {
-    return 1.0 - sqrt(1.0 - x * x);
+    return 1.0 - sqrt(max(1.0 - x * x, 0.0));
 }
 
 half4 main(float2 coord) {
     float2 halfSize = size * 0.5;
     float2 centeredCoord = (coord + offset) - halfSize;
-    float radius = radiusAt(coord, cornerRadii);
+    float radius = radiusAt(centeredCoord, cornerRadii);
     
     float sd = sdRoundedRect(centeredCoord, halfSize, radius);
-    if (-sd >= refractionHeight) {
-        return content.eval(coord);
-    }
     sd = min(sd, 0.0);
     
-    float d = circleMap(1.0 - -sd / refractionHeight) * refractionAmount;
-    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
-    float2 grad = normalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius) + depthEffect * normalize(centeredCoord));
+    float edgeFactor = clamp(1.0 - -sd / max(refractionHeight, 0.001), 0.0, 1.0);
+    float edgeD = circleMap(edgeFactor) * refractionAmount;
     
-    float2 refractedCoord = coord + d * grad;
+    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
+    float2 edgeGrad = safeNormalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius));
+    float2 centerGrad = safeNormalize(centeredCoord);
+    
+    float centerDist = length(centeredCoord) / max(length(halfSize), 0.001);
+    float centerD = depthEffect * circleMap(clamp(centerDist, 0.0, 1.0)) * refractionAmount * 0.4;
+    
+    float2 displacement = (edgeD * edgeGrad) + (centerD * centerGrad);
+    float2 refractedCoord = coord + displacement;
     return content.eval(refractedCoord);
 }"""
 
@@ -98,27 +107,32 @@ uniform float chromaticAberration;
 $RoundedRectSDF
 
 float circleMap(float x) {
-    return 1.0 - sqrt(1.0 - x * x);
+    return 1.0 - sqrt(max(1.0 - x * x, 0.0));
 }
 
 half4 main(float2 coord) {
     float2 halfSize = size * 0.5;
     float2 centeredCoord = (coord + offset) - halfSize;
-    float radius = radiusAt(coord, cornerRadii);
+    float radius = radiusAt(centeredCoord, cornerRadii);
     
     float sd = sdRoundedRect(centeredCoord, halfSize, radius);
-    if (-sd >= refractionHeight) {
-        return content.eval(coord);
-    }
     sd = min(sd, 0.0);
     
-    float d = circleMap(1.0 - -sd / refractionHeight) * refractionAmount;
-    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
-    float2 grad = normalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius) + depthEffect * normalize(centeredCoord));
+    float edgeFactor = clamp(1.0 - -sd / max(refractionHeight, 0.001), 0.0, 1.0);
+    float edgeD = circleMap(edgeFactor) * refractionAmount;
     
-    float2 refractedCoord = coord + d * grad;
+    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
+    float2 edgeGrad = safeNormalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius));
+    float2 centerGrad = safeNormalize(centeredCoord);
+    
+    float centerDist = length(centeredCoord) / max(length(halfSize), 0.001);
+    float centerD = depthEffect * circleMap(clamp(centerDist, 0.0, 1.0)) * refractionAmount * 0.4;
+    
+    float2 displacement = (edgeD * edgeGrad) + (centerD * centerGrad);
+    float2 refractedCoord = coord + displacement;
+    
     float dispersionIntensity = chromaticAberration * ((centeredCoord.x * centeredCoord.y) / (halfSize.x * halfSize.y));
-    float2 dispersedCoord = d * grad * dispersionIntensity;
+    float2 dispersedCoord = displacement * dispersionIntensity;
     
     half4 color = half4(0.0);
     
@@ -170,7 +184,7 @@ $RoundedRectSDF
 half4 main(float2 coord) {
     float2 halfSize = size * 0.5;
     float2 centeredCoord = coord - halfSize;
-    float radius = radiusAt(coord, cornerRadii);
+    float radius = radiusAt(centeredCoord, cornerRadii);
     
     float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
     float2 grad = gradSdRoundedRect(centeredCoord, halfSize, gradRadius);
@@ -192,7 +206,7 @@ $RoundedRectSDF
 half4 main(float2 coord) {
     float2 halfSize = size * 0.5;
     float2 centeredCoord = coord - halfSize;
-    float radius = radiusAt(coord, cornerRadii);
+    float radius = radiusAt(centeredCoord, cornerRadii);
     
     float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));
     float2 grad = gradSdRoundedRect(centeredCoord, halfSize, gradRadius);

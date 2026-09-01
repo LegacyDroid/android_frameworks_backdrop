@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.node.DrawModifierNode
+import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.node.GlobalPositionAwareModifierNode
 import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
@@ -301,9 +302,33 @@ private class DrawBackdropNode(
             layer.topLeft =
                 if (padding != 0f) IntOffset(-padding.toInt(), -padding.toInt())
                 else IntOffset.Zero
+
+            if (diagnosticsSent < 5) {
+                diagnosticsSent++
+                try {
+                    val dc = drawContext
+                    val dcClass = dc.javaClass.name
+                    val dcCL = dc.javaClass.classLoader?.javaClass?.name ?: "null"
+                    val parentLayer = dc.graphicsLayer
+                    val canvas = dc.canvas
+                    val nativeCanvas = try {
+                        val method = canvas.javaClass.getMethod("getInternalCanvas")
+                        method.invoke(canvas) as? android.graphics.Canvas
+                    } catch (_: Exception) { null }
+                    val isHwAccelerated = nativeCanvas?.isHardwareAccelerated ?: false
+                        "drawBackdropLayer #$diagnosticsSent: " +
+                        "size=$size, layerClass=${layer.javaClass.simpleName}, " +
+                        "dcClass=$dcClass, dcCL=$dcCL, " +
+                        "parentLayer=${parentLayer?.javaClass?.simpleName ?: "null"}, " +
+                        "hwAccelerated=$isHwAccelerated, " +
+                        "renderEffect=${layer.renderEffect?.javaClass?.simpleName ?: "null"}"
+                    )
+                } catch (e: Exception) {
+                }
+            }
+
             drawLayer(layer)
         } else {
-            android.util.Log.w("Backdrop", "drawBackdropLayer: graphicsLayer is null!")
         }
     }
 
@@ -319,7 +344,7 @@ private class DrawBackdropNode(
 
     override fun ContentDrawScope.draw() {
         if (effectScope.update(this)) {
-            updateEffects()
+            observeEffects()
         }
 
         onDrawBehind?.invoke(this)
@@ -340,6 +365,7 @@ private class DrawBackdropNode(
 
     override fun onGloballyPositioned(coordinates: LayoutCoordinates) {
         if (coordinates.isAttached) {
+            val wasNull = layoutCoordinates == null
             if (backdrop.isCoordinatesDependent) {
                 layoutCoordinates = coordinates
             } else {
@@ -348,6 +374,9 @@ private class DrawBackdropNode(
                 }
             }
             exportedBackdrop?.layerCoordinates = coordinates
+            if (wasNull && layoutCoordinates != null) {
+                invalidateDraw()
+            }
         }
     }
 
@@ -357,6 +386,7 @@ private class DrawBackdropNode(
 
     fun invalidateDrawCache() {
         observeEffects()
+        invalidateDraw()
     }
 
     private fun observeEffects() {
@@ -365,25 +395,21 @@ private class DrawBackdropNode(
 
     private fun updateEffects() {
         if (!isRenderEffectSupported()) {
-            android.util.Log.w("Backdrop", "isRenderEffectSupported=false")
             return
         }
         if (effectScope.size == Size.Unspecified) return
 
         effectScope.apply(effects)
         val effect = effectScope.renderEffect
-        android.util.Log.d("Backdrop", "updateEffects: size=${effectScope.size}, renderEffect=$effect, graphicsLayer=$graphicsLayer")
         graphicsLayer?.renderEffect = effect
         padding = effectScope.padding
     }
 
     override fun onAttach() {
         val graphicsContext = requireGraphicsContext()
-        android.util.Log.d("Backdrop", "onAttach: graphicsContext=$graphicsContext")
         graphicsLayer = graphicsContext.createGraphicsLayer().apply {
             compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
         }
-        android.util.Log.d("Backdrop", "onAttach: graphicsLayer=$graphicsLayer")
 
         observeEffects()
     }

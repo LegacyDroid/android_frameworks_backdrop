@@ -14,12 +14,29 @@ internal fun DrawScope.recordLayer(
 ) {
     val density = node.requireDensity()
     layer.record(density, layoutDirection, size) {
-        val prevDensity = drawContext.density
-        drawContext.density = density
+        val outerDrawContext = this@recordLayer.drawContext
+        val layerDrawContext = this.drawContext
+
+        val prevCanvas = outerDrawContext.canvas
+        val prevDensity = outerDrawContext.density
+        val prevLayoutDirection = outerDrawContext.layoutDirection
+        val prevSize = outerDrawContext.size
+        val prevGraphicsLayer = outerDrawContext.graphicsLayer
+
+        outerDrawContext.canvas = layerDrawContext.canvas
+        outerDrawContext.density = layerDrawContext.density
+        outerDrawContext.layoutDirection = layerDrawContext.layoutDirection
+        outerDrawContext.size = layerDrawContext.size
+        outerDrawContext.graphicsLayer = layerDrawContext.graphicsLayer
+
         try {
             this.block()
         } finally {
-            drawContext.density = prevDensity
+            outerDrawContext.canvas = prevCanvas
+            outerDrawContext.density = prevDensity
+            outerDrawContext.layoutDirection = prevLayoutDirection
+            outerDrawContext.size = prevSize
+            outerDrawContext.graphicsLayer = prevGraphicsLayer
         }
     }
 }
