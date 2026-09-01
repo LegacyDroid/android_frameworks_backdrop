@@ -363,6 +363,7 @@ private class DrawBackdropNode(
 
     private fun updateEffects() {
         if (!isRenderEffectSupported()) return
+        if (effectScope.size.isUnspecified) return
 
         effectScope.apply(effects)
         graphicsLayer?.renderEffect = effectScope.renderEffect
