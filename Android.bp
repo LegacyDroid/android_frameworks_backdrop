@@ -7,7 +7,7 @@ android_library {
     static_libs: [
         "LiquidGlassShapes",
         "liquidglass-compose-foundation",
-        "liquidglass-compose-runtime",
+        "androidx.compose.runtime_runtime",
         "liquidglass-compose-ui",
         "liquidglass-compose-ui-graphics",
     ],
