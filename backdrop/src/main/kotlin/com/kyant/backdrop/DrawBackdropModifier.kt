@@ -302,6 +302,8 @@ private class DrawBackdropNode(
                 if (padding != 0f) IntOffset(-padding.toInt(), -padding.toInt())
                 else IntOffset.Zero
             drawLayer(layer)
+        } else {
+            android.util.Log.w("Backdrop", "drawBackdropLayer: graphicsLayer is null!")
         }
     }
 
@@ -362,19 +364,26 @@ private class DrawBackdropNode(
     }
 
     private fun updateEffects() {
-        if (!isRenderEffectSupported()) return
+        if (!isRenderEffectSupported()) {
+            android.util.Log.w("Backdrop", "isRenderEffectSupported=false")
+            return
+        }
         if (effectScope.size == Size.Unspecified) return
 
         effectScope.apply(effects)
-        graphicsLayer?.renderEffect = effectScope.renderEffect
+        val effect = effectScope.renderEffect
+        android.util.Log.d("Backdrop", "updateEffects: size=${effectScope.size}, renderEffect=$effect, graphicsLayer=$graphicsLayer")
+        graphicsLayer?.renderEffect = effect
         padding = effectScope.padding
     }
 
     override fun onAttach() {
         val graphicsContext = requireGraphicsContext()
+        android.util.Log.d("Backdrop", "onAttach: graphicsContext=$graphicsContext")
         graphicsLayer = graphicsContext.createGraphicsLayer().apply {
             compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
         }
+        android.util.Log.d("Backdrop", "onAttach: graphicsLayer=$graphicsLayer, compositingStrategy=$compositingStrategy")
 
         observeEffects()
     }
