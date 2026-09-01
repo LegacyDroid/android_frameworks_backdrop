@@ -17,7 +17,7 @@ android_library {
         "androidx.compose.runtime_runtime",
         "liquidglass-compose-ui",
         "liquidglass-compose-ui-graphics",
-        "androidx.compose.ui_ui-util",
+        "liquidglass-compose-ui-util",
     ],
 
     kotlincflags: [
