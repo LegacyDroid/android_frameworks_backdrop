@@ -1,5 +1,5 @@
-// LiquidGlass Compose UI 1.7.0 prebuilt — provides GraphicsLayer API
-// not available in AOSP's compose-ui 1.7.0-alpha03
+// LiquidGlass Compose prebuilts — 1.7.0 stable to match our compose-ui
+// AOSP ships 1.7.0-alpha03 which is binary-incompatible with 1.7.0 stable
 
 android_library_import {
     name: "liquidglass-compose-ui-graphics-nodeps",
@@ -101,6 +101,84 @@ android_library {
         "kotlin-stdlib",
         "kotlinx_coroutines",
         "kotlinx_coroutines_android",
+    ],
+    java_version: "1.7",
+}
+
+android_library_import {
+    name: "liquidglass-compose-foundation-layout-nodeps",
+    aars: ["foundation-layout-android-1.7.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-geometry",
+        "androidx.compose.ui_ui-unit",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-compose-foundation-layout",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-compose-foundation-layout-nodeps",
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-geometry",
+        "androidx.compose.ui_ui-unit",
+        "kotlin-stdlib",
+    ],
+    java_version: "1.7",
+}
+
+android_library_import {
+    name: "liquidglass-compose-foundation-nodeps",
+    aars: ["foundation-android-1.7.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.collection_collection",
+        "liquidglass-compose-foundation-layout",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-text",
+        "androidx.compose.ui_ui-util",
+        "androidx.core_core",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-compose-foundation",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-compose-foundation-nodeps",
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.collection_collection",
+        "liquidglass-compose-foundation-layout",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-text",
+        "androidx.compose.ui_ui-util",
+        "androidx.core_core",
+        "kotlin-stdlib",
     ],
     java_version: "1.7",
 }

@@ -10,7 +10,7 @@ android_library {
         "LiquidGlassShapes",
         "kotlinx-coroutines-android",
         "androidx.activity_activity-compose",
-        "androidx.compose.foundation_foundation",
+        "liquidglass-compose-foundation",
         "androidx.compose.material_material-ripple",
         "androidx.compose.runtime_runtime",
         "liquidglass-compose-ui",
