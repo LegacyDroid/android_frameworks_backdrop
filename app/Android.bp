@@ -14,7 +14,7 @@ android_library {
         "liquidglass-compose-animation-core",
         "liquidglass-compose-foundation",
         "liquidglass-material-ripple",
-        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-runtime",
         "liquidglass-compose-ui",
         "liquidglass-compose-ui-graphics",
         "liquidglass-compose-ui-util",
