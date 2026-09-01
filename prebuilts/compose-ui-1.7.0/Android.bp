@@ -248,3 +248,89 @@ android_library {
     ],
     java_version: "1.7",
 }
+
+// ---- animation-core ----
+
+android_library_import {
+    name: "liquidglass-compose-animation-core-nodeps",
+    aars: ["animation-core-android-1.7.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.collection_collection",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "liquidglass-compose-ui-graphics",
+        "androidx.compose.ui_ui-unit",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+        "kotlinx_coroutines",
+    ],
+}
+
+android_library {
+    name: "liquidglass-compose-animation-core",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-compose-animation-core-nodeps",
+        "androidx.annotation_annotation",
+        "androidx.collection_collection",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "liquidglass-compose-ui-graphics",
+        "androidx.compose.ui_ui-unit",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+        "kotlinx_coroutines",
+    ],
+    java_version: "1.7",
+}
+
+// ---- animation ----
+
+android_library_import {
+    name: "liquidglass-compose-animation-nodeps",
+    aars: ["animation-android-1.7.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.collection_collection",
+        "liquidglass-compose-animation-core",
+        "liquidglass-compose-foundation-layout",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-geometry",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-compose-animation",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-compose-animation-nodeps",
+        "androidx.annotation_annotation",
+        "androidx.annotation_annotation-experimental",
+        "androidx.collection_collection",
+        "liquidglass-compose-animation-core",
+        "liquidglass-compose-foundation-layout",
+        "androidx.compose.runtime_runtime",
+        "liquidglass-compose-ui",
+        "androidx.compose.ui_ui-geometry",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+    ],
+    java_version: "1.7",
+}
