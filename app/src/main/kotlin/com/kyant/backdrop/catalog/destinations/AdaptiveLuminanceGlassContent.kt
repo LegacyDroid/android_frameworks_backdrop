@@ -19,9 +19,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import android.view.ViewGroup
-import androidx.compose.ui.graphics.AndroidGraphicsContext
+import androidx.compose.ui.graphics.GraphicsContext
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
+import java.lang.reflect.Constructor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
@@ -52,7 +53,10 @@ fun AdaptiveLuminanceGlassContent() {
     val layer = remember(view) {
         val viewGroup = view.parent as? ViewGroup
             ?: throw IllegalStateException("No ViewGroup parent")
-        val graphicsContext = AndroidGraphicsContext(viewGroup)
+        @Suppress("UNCHECKED_CAST")
+        val ctor = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
+            .getConstructor(ViewGroup::class.java) as Constructor<ViewGroup>
+        val graphicsContext = ctor.newInstance(viewGroup) as GraphicsContext
         graphicsContext.createGraphicsLayer()
     }
     val luminanceAnimation = remember(isLightTheme) {

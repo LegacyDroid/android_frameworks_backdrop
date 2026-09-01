@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.AndroidGraphicsContext
+import androidx.compose.ui.graphics.GraphicsContext
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.internal.InverseLayerScope
+import java.lang.reflect.Constructor
 
 private val DefaultOnDraw: ContentDrawScope.() -> Unit = { drawContent() }
 
@@ -30,7 +31,10 @@ private fun rememberGraphicsLayerCompat(): GraphicsLayer {
     val graphicsContext = remember(view) {
         val viewGroup = view.parent as? ViewGroup
             ?: throw IllegalStateException("No ViewGroup parent found")
-        AndroidGraphicsContext(viewGroup)
+        @Suppress("UNCHECKED_CAST")
+        val ctor = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
+            .getConstructor(ViewGroup::class.java) as Constructor<ViewGroup>
+        ctor.newInstance(viewGroup) as GraphicsContext
     }
     return remember(graphicsContext) { graphicsContext.createGraphicsLayer() }
 }
