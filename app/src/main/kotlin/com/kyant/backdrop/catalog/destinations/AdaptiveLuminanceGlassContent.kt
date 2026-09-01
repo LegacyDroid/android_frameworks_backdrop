@@ -1,6 +1,8 @@
 package com.kyant.backdrop.catalog.destinations
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.TwoWayConverter
+import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -62,8 +64,12 @@ fun AdaptiveLuminanceGlassContent() {
     val luminanceAnimation = remember(isLightTheme) {
         Animatable(if (isLightTheme) 1f else 0f)
     }
-    val contentColorAnimation = remember(isLightTheme) {
-        Animatable(if (isLightTheme) Color.Black else Color.White, Color.VectorConverter)
+    val contentColorAnimation: Animatable<Color, AnimationVector4D> = remember(isLightTheme) {
+        val converter = TwoWayConverter<Color, AnimationVector4D>(
+            convertToVector = { c -> AnimationVector4D(c.red, c.green, c.blue, c.alpha) },
+            convertFromVector = { v -> Color(v.v1, v.v2, v.v3, v.v4) }
+        )
+        Animatable(if (isLightTheme) Color.Black else Color.White, converter)
     }
     LaunchedEffect(layer) {
         val buffer = IntArray(25)
