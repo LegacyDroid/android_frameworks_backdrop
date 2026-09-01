@@ -383,7 +383,7 @@ private class DrawBackdropNode(
         graphicsLayer = graphicsContext.createGraphicsLayer().apply {
             compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
         }
-        android.util.Log.d("Backdrop", "onAttach: graphicsLayer=$graphicsLayer, compositingStrategy=$compositingStrategy")
+        android.util.Log.d("Backdrop", "onAttach: graphicsLayer=$graphicsLayer")
 
         observeEffects()
     }
