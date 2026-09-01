@@ -28,6 +28,7 @@ import com.kyant.backdrop.internal.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.IntSize
 import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.highlight.Highlight
