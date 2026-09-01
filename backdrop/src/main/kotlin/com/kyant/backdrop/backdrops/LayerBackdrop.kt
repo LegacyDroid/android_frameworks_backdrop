@@ -31,9 +31,10 @@ private fun rememberGraphicsLayerCompat(): GraphicsLayer {
     val graphicsContext = remember(view) {
         val viewGroup = view.parent as? ViewGroup
             ?: throw IllegalStateException("No ViewGroup parent found")
+        val clazz = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
+        val ctor = clazz.getDeclaredConstructor(ViewGroup::class.java)
+        ctor.isAccessible = true
         @Suppress("UNCHECKED_CAST")
-        val ctor = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
-            .getConstructor(ViewGroup::class.java) as Constructor<ViewGroup>
         ctor.newInstance(viewGroup) as GraphicsContext
     }
     return remember(graphicsContext) { graphicsContext.createGraphicsLayer() }

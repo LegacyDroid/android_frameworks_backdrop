@@ -20,9 +20,9 @@ internal fun CompositionLocalConsumerModifierNode.requireGraphicsContext(): Grap
 
 internal fun createGraphicsContextFromView(view: View): GraphicsContext {
     val viewGroup = view.findViewGroup()
-    @Suppress("UNCHECKED_CAST")
-    val ctor = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
-        .getConstructor(ViewGroup::class.java) as Constructor<ViewGroup>
+    val clazz = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
+    val ctor = clazz.getDeclaredConstructor(ViewGroup::class.java)
+    ctor.isAccessible = true
     @Suppress("UNCHECKED_CAST")
     return ctor.newInstance(viewGroup) as GraphicsContext
 }

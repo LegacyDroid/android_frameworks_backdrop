@@ -53,9 +53,10 @@ fun AdaptiveLuminanceGlassContent() {
     val layer = remember(view) {
         val viewGroup = view.parent as? ViewGroup
             ?: throw IllegalStateException("No ViewGroup parent")
+        val clazz = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
+        val ctor = clazz.getDeclaredConstructor(ViewGroup::class.java)
+        ctor.isAccessible = true
         @Suppress("UNCHECKED_CAST")
-        val ctor = Class.forName("androidx.compose.ui.graphics.AndroidGraphicsContext")
-            .getConstructor(ViewGroup::class.java) as Constructor<ViewGroup>
         val graphicsContext = ctor.newInstance(viewGroup) as GraphicsContext
         graphicsContext.createGraphicsLayer()
     }
