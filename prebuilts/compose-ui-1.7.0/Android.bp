@@ -182,3 +182,69 @@ android_library {
     ],
     java_version: "1.7",
 }
+
+android_library_import {
+    name: "liquidglass-material-ripple-nodeps",
+    aars: ["material-ripple-android-1.7.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.collection_collection",
+        "liquidglass-compose-foundation",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-material-ripple",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-material-ripple-nodeps",
+        "androidx.collection_collection",
+        "liquidglass-compose-foundation",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+    ],
+    java_version: "1.7",
+}
+
+android_library_import {
+    name: "liquidglass-activity-compose-nodeps",
+    aars: ["activity-compose-1.9.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.activity_activity-ktx",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.runtime_runtime-saveable",
+        "liquidglass-compose-ui",
+        "androidx.lifecycle_lifecycle-viewmodel",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-activity-compose",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-activity-compose-nodeps",
+        "androidx.activity_activity-ktx",
+        "androidx.compose.runtime_runtime",
+        "androidx.compose.runtime_runtime-saveable",
+        "liquidglass-compose-ui",
+        "androidx.lifecycle_lifecycle-viewmodel",
+        "kotlin-stdlib",
+    ],
+    java_version: "1.7",
+}
