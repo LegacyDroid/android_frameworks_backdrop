@@ -364,7 +364,7 @@ private class DrawBackdropNode(
     private fun updateEffects() {
         if (!isRenderEffectSupported()) return
         val s = effectScope.size
-        if (s.width.isNaN() || s.width <= 0f || s.height.isNaN() || s.height <= 0f) return
+        if (s == Size.Unspecified) return
 
         effectScope.apply(effects)
         graphicsLayer?.renderEffect = effectScope.renderEffect
