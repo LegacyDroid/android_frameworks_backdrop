@@ -63,6 +63,7 @@ android_library_import {
         "androidx.emoji2_emoji2",
         "androidx.lifecycle_lifecycle-runtime",
         "androidx.lifecycle_lifecycle-viewmodel",
+        "liquidglass-lifecycle-runtime-compose",
         "androidx.profileinstaller_profileinstaller",
         "androidx.savedstate_savedstate-ktx",
         "kotlin-stdlib",
@@ -96,6 +97,7 @@ android_library {
         "androidx.emoji2_emoji2",
         "androidx.lifecycle_lifecycle-runtime",
         "androidx.lifecycle_lifecycle-viewmodel",
+        "liquidglass-lifecycle-runtime-compose",
         "androidx.profileinstaller_profileinstaller",
         "androidx.savedstate_savedstate-ktx",
         "kotlin-stdlib",
@@ -330,6 +332,40 @@ android_library {
         "liquidglass-compose-ui",
         "androidx.compose.ui_ui-geometry",
         "androidx.compose.ui_ui-util",
+        "kotlin-stdlib",
+    ],
+    java_version: "1.7",
+}
+
+// ---- lifecycle-runtime-compose ----
+
+android_library_import {
+    name: "liquidglass-lifecycle-runtime-compose-nodeps",
+    aars: ["lifecycle-runtime-compose-android-2.8.0.aar"],
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.lifecycle_lifecycle-common",
+        "androidx.lifecycle_lifecycle-runtime",
+        "androidx.compose.runtime_runtime",
+        "kotlin-stdlib",
+    ],
+}
+
+android_library {
+    name: "liquidglass-lifecycle-runtime-compose",
+    sdk_version: "31",
+    apex_available: ["//apex_available:platform"],
+    min_sdk_version: "21",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "liquidglass-lifecycle-runtime-compose-nodeps",
+        "androidx.annotation_annotation",
+        "androidx.lifecycle_lifecycle-common",
+        "androidx.lifecycle_lifecycle-runtime",
+        "androidx.compose.runtime_runtime",
         "kotlin-stdlib",
     ],
     java_version: "1.7",
