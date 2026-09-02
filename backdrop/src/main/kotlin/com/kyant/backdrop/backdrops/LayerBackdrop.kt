@@ -1,5 +1,6 @@
 package com.kyant.backdrop.backdrops
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -48,12 +49,14 @@ class LayerBackdrop internal constructor(
         coordinates: LayoutCoordinates?,
         layerBlock: (GraphicsLayerScope.() -> Unit)?
     ) {
+        Log.d("BackdropEffects", "LayerBackdrop.drawBackdrop called, coordinates=$coordinates, layerCoordinates=$layerCoordinates")
         val coordinates = coordinates ?: run {
             return
         }
         val layerCoordinates = layerCoordinates ?: run {
             return
         }
+        Log.d("BackdropEffects", "LayerBackdrop.drawBackdrop: proceeding with drawing")
         withTransform({
             if (layerBlock != null) {
                 with(obtainInverseLayerScope()) { inverseTransform(density, layerBlock) }

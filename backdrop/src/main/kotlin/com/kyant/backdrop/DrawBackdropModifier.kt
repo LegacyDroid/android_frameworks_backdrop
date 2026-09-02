@@ -33,6 +33,7 @@ import androidx.compose.ui.geometry.Size
 import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.highlight.HighlightElement
+import android.util.Log
 import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.recordLayer
 import com.kyant.backdrop.shadow.InnerShadow
@@ -381,10 +382,12 @@ private class DrawBackdropNode(
         }
         if (effectScope.size == Size.Unspecified) return
 
+        Log.d("BackdropEffects", "updateEffects called, size=${effectScope.size}, graphicsLayer=$graphicsLayer")
         effectScope.apply(effects)
         val effect = effectScope.renderEffect
         graphicsLayer?.renderEffect = effect
         padding = effectScope.padding
+        Log.d("BackdropEffects", "updateEffects done, renderEffect=${graphicsLayer?.renderEffect}")
     }
 
     override fun onAttach() {
